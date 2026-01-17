@@ -6,11 +6,14 @@ const cors = require('cors');
 app.use(express.json());
 app.use(cors());
 const auth = require('./Auth/auth');
+const CycleInfo = require('./Cycle/CycleInfo');
 const PORT = 3000;
 
 // auth routes
 
 app.use('/auth',auth);
+
+app.use('/cycle',CycleInfo);
 
 
 app.listen(PORT,()=>{
