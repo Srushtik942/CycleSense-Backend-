@@ -38,4 +38,49 @@ router.post("/add-length",Verify, async(req,res)=>{
 })
 
 
+// Get User Cycle
+
+router.get("/me/:id",async(req,res)=>{
+    try{
+        const id = req.params.id;
+        const response = await Cycle.findById({_id:id});
+        console.log(response);
+
+        if(!response){
+            return res.status(404).json({error:"Cycle data hasn't updated or provided yet."});
+        }
+
+        res.status(200).json({message:"Data Fetched successfully!",response})
+
+    }catch(error){
+        res.status(500).json({message:"Internal Server Error",error:error.message});
+    }
+})
+
+// /cycles/me
+
+router.delete("/me/:id",async(req,res)=>{
+    try{
+        const id = req.params.id;
+
+        const response = await Cycle.findByIdAndDelete({_id:id});
+
+        if(!response){
+            return res.status(404).json({error:"User is not found with this id!"})
+        }
+
+        res.status(200).json({message:"Data deleted successfully!"});
+
+    }catch(error){
+        res.status(500).json({message:"Internal Server Error",error:error.message});
+    }
+})
+
+// GET /predict/next-period
+
+router
+
+
+
+
 module.exports = router

@@ -10,7 +10,7 @@ const JWT_SECRET = 'JWT_SECRET_KEY';
 
 router.post('/signup',async(req,res)=>{
     try{
-        const {name,email,password} = req.body;
+        const {name,email,password,age} = req.body;
 
         if(!email || !password){
             return res.status(400).json({message:"Email and password required"});
@@ -25,7 +25,8 @@ router.post('/signup',async(req,res)=>{
         const newUser = await FemaleUser({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            age
         });
 
         await newUser.save();

@@ -16,7 +16,7 @@ const FemaleUserSchema = new mongoose.Schema({
     },
     age:{
         type:Number,
-        required: true
+        
     },
 },
 {
