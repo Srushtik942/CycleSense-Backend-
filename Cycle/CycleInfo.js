@@ -42,8 +42,8 @@ router.post("/add-length",Verify, async(req,res)=>{
 
 router.get("/me/:id",async(req,res)=>{
     try{
-        const id = req.params.id;
-        const response = await Cycle.findById({_id:id});
+        const userId = req.params.id;
+        const response = await Cycle.findOne({userId: userId});
         console.log(response);
 
         if(!response){
@@ -78,7 +78,49 @@ router.delete("/me/:id",async(req,res)=>{
 
 // GET /predict/next-period
 
-router
+router.get("/predict/next-period/:id",async(req,res)=>{
+    try{
+        const userId = req.params.id;
+        // console.log(id, typeof id);
+
+        const response = await Cycle.findOne({userId:userId});
+        console.log(response);
+
+        if(!response){
+            return res.status(404).json({error:"User is not present"})
+        }
+
+        const { lastPeriodDate, cycleLength } = response;
+        console.log("lastPeriodDate",lastPeriodDate);
+        console.log("cycleLength",cycleLength);
+
+
+         if (!lastPeriodDate || !cycleLength) {
+      return res.status(400).json({
+        error: "Insufficient data to predict next period",
+      });
+    }
+
+    // prediction
+    const cycleDays = Number(cycleLength);
+
+const nextPeriodDate = new Date(
+  new Date(lastPeriodDate).getTime() +
+    cycleDays * 24 * 60 * 60 * 1000
+);
+
+
+      res.status(200).json({
+      message: "Next period predicted successfully",
+      lastPeriodDate,
+      cycleLength,
+      nextPeriodDate,
+    });
+
+    }catch(error){
+        res.status(500).json({message:"Internal Server Error",error:error.message});
+    }
+})
 
 
 
