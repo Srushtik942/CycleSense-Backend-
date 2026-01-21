@@ -7,6 +7,7 @@ app.use(express.json());
 app.use(cors());
 const auth = require('./Auth/auth');
 const CycleInfo = require('./Cycle/CycleInfo');
+const aiRoutes = require('./routes/ai.routes')
 const PORT = 3000;
 
 // auth routes
@@ -14,6 +15,8 @@ const PORT = 3000;
 app.use('/auth',auth);
 
 app.use('/cycle',CycleInfo);
+
+app.use("/ai",aiRoutes)
 
 
 app.listen(PORT,()=>{

@@ -122,6 +122,58 @@ const nextPeriodDate = new Date(
     }
 })
 
+// fertile window predcition
+router.get("/predict/fertile-window/:id",async(req,res)=>{
+    try{
+        const userId = req.params.id;
+
+        const response = await Cycle.findOne({userId});
+        console.log(response);
+
+        if(!response){
+            return res.status(404).json({error:"User not found!"})
+        }
+
+        // check cycleLength is present or not
+        const {cycleLength, lastPeriodDate}= response;
+
+        console.log(cycleLength);
+        console.log(lastPeriodDate);
+
+        if(!cycleLength || !lastPeriodDate){
+            return res.status(400).json({error:"Cycle length is not present in the repsonse"});
+        }
+
+        let CycleLength = Number(cycleLength);
+
+        // ovulation calculation
+
+        let ovulationDay = CycleLength - 14;
+        let fertileStart = ovulationDay - 4;
+        let fertileEnd = ovulationDay + 1;
+
+        // generate dates
+
+        const baseDate = new Date(lastPeriodDate);
+
+        const fertileStartDate = new Date(baseDate);
+        fertileStartDate.setDate(baseDate.getDate() + fertileStart);
+
+        const fertileEndDate = new Date(baseDate);
+        fertileEndDate.setDate(baseDate.getDate() + fertileEnd);
+
+        return res.status(200).json({
+            fertileWindow:{
+                startDate: fertileStartDate.toISOString().split("T")[0],
+                endDate : fertileEndDate.toISOString().split("T")[0],
+            }
+        });
+
+    }catch(error){
+        res.status(500).json({message:"Internal Server Error",error:error.message});
+    }
+})
+
 
 
 
